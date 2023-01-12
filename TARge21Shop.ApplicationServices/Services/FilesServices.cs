@@ -32,7 +32,7 @@ namespace TARge21Shop.ApplicationServices.Services
                         photo.CopyTo(target);
                         files.ImageData = target.ToArray();
 
-                        _context.FileToDatabase.Add(files);
+                        // _context.FileToDatabase.Add(files);
                     }
                 }
             }
