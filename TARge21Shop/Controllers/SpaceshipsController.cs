@@ -21,6 +21,7 @@ namespace TARge21Shop.Controllers
             _spaceshipsServices = spaceshipsServices;
         }
 
+
         public IActionResult Index()
         {
             var result = _context.Spaceships
@@ -37,6 +38,7 @@ namespace TARge21Shop.Controllers
             return View(result);
         }
 
+
         [HttpGet]
         public IActionResult Create()
         {
@@ -44,6 +46,7 @@ namespace TARge21Shop.Controllers
 
             return View("CreateUpdate", spaceship);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Create(SpaceshipCreateUpdateViewModel vm)
@@ -64,14 +67,6 @@ namespace TARge21Shop.Controllers
                 BuiltDate = vm.BuiltDate,
                 CreatedAt = vm.CreatedAt,
                 ModifiedAt = vm.ModifiedAt,
-                Files = vm.Files,
-                Image = vm.Image.Select(x => new FileToDatabaseDto
-                {
-                    Id = x.Id,
-                    ImageData = x.ImageData,
-                    ImageTitle = x.ImageTitle,
-                    SpaceshipId = x.SpaceshipId,
-                }).ToArray()
             };
 
             var result = await _spaceshipsServices.Create(dto);
@@ -83,6 +78,7 @@ namespace TARge21Shop.Controllers
 
             return RedirectToAction(nameof(Index), vm);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Update(Guid id)
@@ -115,6 +111,7 @@ namespace TARge21Shop.Controllers
             return View("CreateUpdate", vm);
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Update(SpaceshipCreateUpdateViewModel vm)
         {
@@ -145,6 +142,7 @@ namespace TARge21Shop.Controllers
 
             return RedirectToAction(nameof(Index), vm);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
@@ -177,6 +175,7 @@ namespace TARge21Shop.Controllers
             return View(vm);
         }
 
+
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -208,10 +207,17 @@ namespace TARge21Shop.Controllers
             return View(vm);
         }
 
+
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmation(Guid id)
         {
             var spaceshipId = await _spaceshipsServices.Delete(id);
+
+            if (spaceshipId == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             return RedirectToAction(nameof(Index));
         }
     }

@@ -1,9 +1,15 @@
 ﻿@model IEnumerable<TARge21Shop.Models.Car.CarIndexViewModel>
 
-<h1>Cars</h1>
+@{
+    int rowNumber = 1;
+}
+
+<div class="h1">
+    Products
+</div>
 
 <div>
-    <a asp-action="add" asp-controller="cars" type="submit" class="btn btn-primary">Add</a>
+    <a asp-action="create" asp-controller="cars" type="submit" class="btn btn-primary">Create</a>
 </div>
 
 <form method="post">
@@ -12,36 +18,30 @@
             <tr>
                 <th scope="col">Nr</th>
                 <th scope="col">Brand</th>
-                <th scope="col">Type</th>
                 <th scope="col">Model</th>
                 <th scope="col">Color</th>
+                <th scope="col">Fuel Type</th>
                 <th scope="col">Price</th>
-                <th scope="col">HorsePower</th>
-                <th scope="col">Weight</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            @{
-                int i = 1;
-            }
-            @foreach (var car in Model)
+            @foreach (var Cars in Model)
             {
-                    <tr>
-                        <td>@i</td>
-                        <td>@car.Brand</td>
-                        <td>@car.Type</td>
-                        <td>@car.Model</td>
-                        <td>@car.Color</td>
-                        <td>@car.Price</td>
-                        <td>@car.HorsePower</td>
-                        <td>@car.Weight</td>
-                        <td>
-                            <a asp-action="details" asp-controller="cars" asp-route-id="@car.Id" class="btn btn-success">Details</a>
-                            <a asp-action="edit" asp-controller="cars" asp-route-id="@car.Id" class="btn btn-primary">Edit</a>
-                            <a asp-action="delete" asp-controller="cars" asp-route-id="@car.Id" class="btn btn-danger">Delete</a>
-                        </td>
-                    </tr>
-                i++;
+                <tr>
+                    <td>@rowNumber</td>
+                    <td>@Cars.Brand</td>
+                    <td>@Cars.Model</td>
+                    <td>@Cars.Color</td>
+                    <td>@Cars.FuelType</td>
+                    <td>@Cars.Price</td>
+                    <td>
+                        <a asp-action="details" asp-controller="cars" asp-route-id="@Cars.Id" class="btn btn-info">Details</a>
+                        <a asp-action="update" asp-controller="cars" asp-route-id="@Cars.Id" class="btn btn-primary">Update</a>
+                        <a asp-action="delete" asp-controller="cars" asp-route-id="@Cars.Id" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+                rowNumber += 1;
             }
         </tbody>
     </table>

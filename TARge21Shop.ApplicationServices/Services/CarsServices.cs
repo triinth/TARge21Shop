@@ -6,86 +6,102 @@ using TARge21Shop.Data;
 
 namespace TARge21Shop.ApplicationServices.Services
 {
-    public class CarsServices : ICarServices
+    public class CarsServices : ICarsServices
     {
         private readonly TARge21ShopContext _context;
-
+        private readonly IFilesServices _files;
         public CarsServices
             (
-                TARge21ShopContext context
+            TARge21ShopContext context,
+            IFilesServices files
             )
         {
             _context = context;
+            _files = files;
         }
 
-        public async Task<Car> Add(CarDto dto)
+        public async Task<Car> Create(CarDto dto)
         {
-            var domain = new Car()
+            var car = new Car()
             {
                 Id = Guid.NewGuid(),
                 Brand = dto.Brand,
-                Type = dto.Type,
                 Model = dto.Model,
                 Color = dto.Color,
+                FuelType = dto.FuelType,
                 Price = dto.Price,
-                HorsePower = dto.HorsePower,
-                Weight = dto.Weight,
-                BuiltDate = dto.BuiltDate,
-                LastMaintenance = dto.LastMaintenance,
-                CreatedAt = DateTime.Now,
-                ModifiedAt = DateTime.Now,
+                EnginePower = dto.EnginePower,
+                Mileage = dto.Mileage,
+                PreviousOwners = dto.PreviousOwners,
+                BuiltDate = DateTime.Now,
+                MaintanceDate = DateTime.Now
+
             };
 
-            await _context.Cars.AddAsync(domain);
-            await _context.SaveChangesAsync();
+			if (dto.Files != null)
+			{
+				_files.UploadFilesToDatabase(dto, car);
+			}
 
-            return domain;
+
+			await _context.Cars.AddAsync(car);
+            await _context.SaveChangesAsync();
+            return car;
         }
 
         public async Task<Car> Update(CarDto dto)
         {
-            var domain = new Car()
+            var car = new Car()
             {
                 Id = dto.Id,
                 Brand = dto.Brand,
-                Type = dto.Type,
                 Model = dto.Model,
                 Color = dto.Color,
+                FuelType = dto.FuelType,
                 Price = dto.Price,
-                HorsePower = dto.HorsePower,
-                Weight = dto.Weight,
+                EnginePower = dto.EnginePower,
+                Mileage = dto.Mileage,
+                PreviousOwners = dto.PreviousOwners,
                 BuiltDate = dto.BuiltDate,
-                LastMaintenance = dto.LastMaintenance,
-                CreatedAt = dto.CreatedAt,
-                ModifiedAt = DateTime.Now,
+                MaintanceDate = dto.MaintanceDate
             };
 
-            _context.Cars.Update(domain);
+			if (dto.Files != null)
+			{
+				_files.UploadFilesToDatabase(dto, car);
+			}
+
+			_context.Cars.Update(car);
             await _context.SaveChangesAsync();
+            return car;
 
-            return domain;
+
         }
 
-        public async Task<Car> GetUpdate(Guid id)
-        {
-            var result = await _context.Cars
-                .FirstOrDefaultAsync(x => x.Id == id);
 
-            return result;
-        }
+		public async Task<Car> Delete(Guid id)
+		{
+			var carId = await _context.Cars
+				.FirstOrDefaultAsync(x => x.Id == id);
 
-        public async Task<Car> Delete(Guid id)
-        {
-            var carId = await _context.Cars
-                .FirstOrDefaultAsync(x => x.Id == id);
+			var images = await _context.FileToDatabases
+				.Where(x => x.CarId == id)
+				.Select(y => new FileToDatabaseDto
+				{
+					Id = y.Id,
+					ImageTitle = y.ImageTitle,
+					CarId = y.CarId,
+				})
+				.ToArrayAsync();
 
-            _context.Cars.Remove(carId);
-            await _context.SaveChangesAsync();
+			await _files.RemoveImagesFromDatabase(images);
+			_context.Cars.Remove(carId);
+			await _context.SaveChangesAsync();
 
-            return carId;
-        }
+			return carId;
+		}
 
-        public async Task<Car> GetAsync(Guid id)
+		public async Task<Car> GetAsync(Guid id)
         {
             var result = await _context.Cars
                 .FirstOrDefaultAsync(x => x.Id == id);

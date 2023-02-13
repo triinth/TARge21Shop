@@ -1,5 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TARge21Shop.Core.Domain;
 using TARge21Shop.Core.Dto;
 using TARge21Shop.Core.ServiceInterface;
@@ -10,18 +14,19 @@ namespace TARge21Shop.ApplicationServices.Services
     public class SpaceshipsServices : ISpaceshipsServices
     {
         private readonly TARge21ShopContext _context;
-        private readonly IFilesServices _files;
 
-        public SpaceshipsServices(TARge21ShopContext context, IFilesServices files)
+        public SpaceshipsServices
+            (
+                TARge21ShopContext context
+            )
         {
             _context = context;
-            _files = files;
         }
+
 
         public async Task<Spaceship> Create(SpaceshipDto dto)
         {
             Spaceship spaceship = new Spaceship();
-            FileToDatabase file = new FileToDatabase();
 
             spaceship.Id = Guid.NewGuid();
             spaceship.Name = dto.Name;
@@ -38,16 +43,13 @@ namespace TARge21Shop.ApplicationServices.Services
             spaceship.CreatedAt = DateTime.Now;
             spaceship.ModifiedAt = DateTime.Now;
 
-            if (dto.Files != null)
-            {
-                _files.UploadFilesToDatabase(dto, spaceship);
-            }
 
             await _context.Spaceships.AddAsync(spaceship);
             await _context.SaveChangesAsync();
 
             return spaceship;
         }
+
 
         public async Task<Spaceship> Update(SpaceshipDto dto)
         {
@@ -75,6 +77,7 @@ namespace TARge21Shop.ApplicationServices.Services
             return domain;
         }
 
+
         public async Task<Spaceship> Delete(Guid id)
         {
             var spaceshipId = await _context.Spaceships
@@ -82,7 +85,7 @@ namespace TARge21Shop.ApplicationServices.Services
 
             _context.Spaceships.Remove(spaceshipId);
             await _context.SaveChangesAsync();
-            
+
             return spaceshipId;
         }
 
