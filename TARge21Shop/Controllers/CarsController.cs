@@ -21,26 +21,7 @@ namespace TARge21Shop.Controllers
             _carsServices = carsServices;
         }
 
-        public IActionResult Index()
-        {
-            var result = _context.Cars
-                .OrderByDescending(y => y.CreatedAt)
-                .Select(x => new CarIndexViewModel
-                {
-                    Id = x.Id,
-                    Brand = x.Brand,
-                    Type = x.Type,
-                    Model = x.Model,
-                    Color = x.Color,
-                    Price= x.Price,
-                    HorsePower= x.HorsePower,
-                    Weight= x.Weight
-                });
-
-            return View(result);
-        }
-
-        [HttpGet]
+       [HttpGet]
         public IActionResult Add()
         {
             CarEditViewModel car = new CarEditViewModel();

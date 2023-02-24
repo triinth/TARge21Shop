@@ -1,4 +1,7 @@
-﻿namespace TARge21Shop.Core.Domain
+﻿using System;
+
+
+namespace TARge21Shop.Core.Domain
 {
     public class FileToDatabase
     {

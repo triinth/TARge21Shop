@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
 using TARge21Shop.Core.Domain;
 using TARge21Shop.Core.Dto;
 using TARge21Shop.Core.ServiceInterface;
 using TARge21Shop.Data;
+
 
 namespace TARge21Shop.ApplicationServices.Services
 {
@@ -12,11 +12,16 @@ namespace TARge21Shop.ApplicationServices.Services
         private readonly TARge21ShopContext _context;
         private readonly IFilesServices _files;
 
-        public SpaceshipsServices(TARge21ShopContext context, IFilesServices files)
+        public SpaceshipsServices
+            (
+                TARge21ShopContext context,
+                IFilesServices files
+            )
         {
             _context = context;
             _files = files;
         }
+
 
         public async Task<Spaceship> Create(SpaceshipDto dto)
         {
@@ -43,11 +48,13 @@ namespace TARge21Shop.ApplicationServices.Services
                 _files.UploadFilesToDatabase(dto, spaceship);
             }
 
+
             await _context.Spaceships.AddAsync(spaceship);
             await _context.SaveChangesAsync();
 
             return spaceship;
         }
+
 
         public async Task<Spaceship> Update(SpaceshipDto dto)
         {
@@ -69,20 +76,37 @@ namespace TARge21Shop.ApplicationServices.Services
                 ModifiedAt = DateTime.Now,
             };
 
+            if (dto.Files != null)
+            {
+                _files.UploadFilesToDatabase(dto, domain);
+            }
+
             _context.Spaceships.Update(domain);
             await _context.SaveChangesAsync();
 
             return domain;
         }
 
+
         public async Task<Spaceship> Delete(Guid id)
         {
             var spaceshipId = await _context.Spaceships
                 .FirstOrDefaultAsync(x => x.Id == id);
 
+            var images = await _context.FileToDatabases
+                .Where(x => x.SpaceshipId == id)
+                .Select(y => new FileToDatabaseDto
+                {
+                    Id = y.Id,
+                    ImageTitle = y.ImageTitle,
+                    SpaceshipId = y.SpaceshipId,
+                })
+                .ToArrayAsync();
+
+            await _files.RemoveImagesFromDatabase(images);
             _context.Spaceships.Remove(spaceshipId);
             await _context.SaveChangesAsync();
-            
+
             return spaceshipId;
         }
 
@@ -91,7 +115,7 @@ namespace TARge21Shop.ApplicationServices.Services
             var result = await _context.Spaceships
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            return result;
+          return result;
         }
     }
 }

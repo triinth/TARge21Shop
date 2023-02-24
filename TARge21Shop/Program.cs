@@ -5,6 +5,7 @@ using TARge21Shop.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -13,6 +14,8 @@ builder.Services.AddDbContext<TARge21ShopContext>(options =>
 
 builder.Services.AddScoped<ISpaceshipsServices, SpaceshipsServices>();
 builder.Services.AddScoped<IFilesServices, FilesServices>();
+builder.Services.AddScoped<IRealEstatesServices, RealEstatesServices>();
+
 
 var app = builder.Build();
 

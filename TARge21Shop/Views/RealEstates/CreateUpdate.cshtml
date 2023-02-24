@@ -1,4 +1,4 @@
-﻿@model TARge21Shop.Models.Spaceship.SpaceshipCreateUpdateViewModel
+﻿@model TARge21Shop.Models.RealEstate.RealEstateCreateUpdateViewModel
 
 
 @if (Model.Id.HasValue)
@@ -18,75 +18,75 @@ else
         <input asp-for="ModifiedAt" type="hidden" />
 
         <div class="form-group row">
-            <label asp-for="Name" class="col-sm-2 col-form-label"></label>
+            <label asp-for="Address" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Address" class="form-control" />
             </div>
         </div>
 
         <div class="form-group row">
-            <label asp-for="Type" class="col-sm-2 col-form-label"></label>
+            <label asp-for="City" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="Type" class="form-control" />
+                <input asp-for="City" class="form-control" />
             </div>
         </div>
 
         <div class="form-group row">
-            <label asp-for="Crew" class="col-sm-2 col-form-label"></label>
+            <label asp-for="Region" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="Crew" class="form-control" />
+                <input asp-for="Region" class="form-control" />
             </div>
         </div>
 
         <div class="form-group row">
-            <label asp-for="Passengers" class="col-sm-2 col-form-label"></label>
+            <label asp-for="PostalCode" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="Passengers" class="form-control" />
+                <input asp-for="PostalCode" class="form-control" />
             </div>
         </div>
 
         <div class="form-group row">
-            <label asp-for="CargoWeight" class="col-sm-2 col-form-label"></label>
+            <label asp-for="Country" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="CargoWeight" class="form-control" />
+                <input asp-for="Country" class="form-control" />
             </div>
         </div>
 
         <div class="form-group row">
-            <label asp-for="FullTripsCount" class="col-sm-2 col-form-label"></label>
+            <label asp-for="Phone" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="FullTripsCount" class="form-control" />
+                <input asp-for="Phone" class="form-control" />
             </div>
         </div>
 
         <div class="form-group row">
-            <label asp-for="MaintenanceCount" class="col-sm-2 col-form-label"></label>
+            <label asp-for="Fax" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="MaintenanceCount" class="form-control" />
+                <input asp-for="Fax" class="form-control" />
             </div>
         </div>
         <div class="form-group row">
-            <label asp-for="LastMaintenance" class="col-sm-2 col-form-label"></label>
+            <label asp-for="Size" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="LastMaintenance" class="form-control" />
+                <input asp-for="Size" class="form-control" />
             </div>
         </div>
         <div class="form-group row">
-            <label asp-for="EnginePower" class="col-sm-2 col-form-label"></label>
+            <label asp-for="Floor" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="EnginePower" class="form-control" />
+                <input asp-for="Floor" class="form-control" />
             </div>
         </div>
         <div class="form-group row">
-            <label asp-for="MaidenLaunch" class="col-sm-2 col-form-label"></label>
+            <label asp-for="Price" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="MaidenLaunch" class="form-control" />
+                <input asp-for="Price" class="form-control" />
             </div>
         </div>
         <div class="form-group row">
-            <label asp-for="BuiltDate" class="col-sm-2 col-form-label"></label>
+            <label asp-for="RoomCount" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="BuiltDate" class="form-control" />
+                <input asp-for="RoomCount" class="form-control" />
             </div>
         </div>
 
@@ -101,21 +101,21 @@ else
         </div>
         <hr />
 
-        @foreach (var images in Model.Image)
+        @foreach (var images in Model.FileToApiViewModels)
         {
             <partial name="_Images" model="images" />
-            <input asp-action="removeImage" asp-controller="spaceships" asp-route-imageId="@images.ImageId" type="submit" class="btn btn-danger" value="Remove Image" />
+            <input asp-action="removeImage" asp-controller="realEstates" asp-route-imageId="@images.ImageId" type="submit" class="btn btn-danger" value="Remove Image" />
         }
 
-        <hr/>
+        <hr />
 
         @if (Model.Id.HasValue)
         {
-            <input asp-action="update" asp-controller="spaceships" type="submit" class=" btn btn-primary" value="Update" />
+            <input asp-action="update" asp-controller="realEstates" type="submit" class=" btn btn-primary" value="Update" />
         }
         else
         {
-            <input asp-action="create" asp-controller="spaceships" type="submit" class=" btn btn-primary" value="Create" />
+            <input asp-action="create" asp-controller="realEstates" type="submit" class=" btn btn-primary" value="Create" />
         }
 
         <a asp-action="index" class="btn btn-primary">Back</a>
@@ -124,13 +124,13 @@ else
 </div>
 
 @section Scripts
-{
+    {
     <script>
-        $(document).ready(function() {
-            $('.custom-file-input').on("change", function() {
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
                 var fileLabel = $(this).next('.custom-file-label');
                 var files = $(this)[0].files;
-                if(files.length > 1) {
+                if (files.length > 1) {
                     fileLabel.html(files.length + ' files selected');
                 }
                 else if (files.length == 1) {

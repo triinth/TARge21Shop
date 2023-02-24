@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+
 namespace TARge21Shop.Core.Domain
 {
     public class Spaceship
